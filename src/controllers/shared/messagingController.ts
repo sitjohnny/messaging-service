@@ -5,14 +5,14 @@ import type { MiddlewareParams } from '../../middleware/middleware.ts';
 import type { EmailApiResponse } from '../../mocks/responses/emailSentResponses.ts';
 import type { TwilioApiResponse } from '../../mocks/responses/smsMmsSentResponse.ts';
 import {
-    inboundEmailRequestSchema,
-    outboundEmailRequestSchema,
+    InboundEmailRequestSchema,
+    OutboundEmailRequestSchema,
     type InboundEmailRequest,
     type OutboundEmailRequest,
 } from '../../models/EmailProvider.ts';
 import {
-    inboundSmsMmsSchema,
-    outboundSmsMmsSchema,
+    InboundSmsMmsSchema,
+    OutboundSmsMmsSchema,
     type InboundSmsMmsRequest,
     type OutboundSmsMmsRequest,
 } from '../../models/SmsMmsProvider.ts';
@@ -38,7 +38,7 @@ export async function handleIncomingMessage(
 
         switch (messageType) {
             case DB_COL_EMAIL:
-                const validationResultEmail = inboundEmailRequestSchema.safeParse(req?.body);
+                const validationResultEmail = InboundEmailRequestSchema.safeParse(req?.body);
 
                 if (!validationResultEmail.success) {
                     return invalidAttributesError(validationResultEmail.error, req, res);
@@ -46,7 +46,7 @@ export async function handleIncomingMessage(
 
                 break;
             case DB_COL_PHONE_NUMBER:
-                const validationResult = inboundSmsMmsSchema.safeParse(req?.body);
+                const validationResult = InboundSmsMmsSchema.safeParse(req?.body);
 
                 if (!validationResult.success) {
                     return invalidAttributesError(validationResult.error, req, res);
@@ -97,7 +97,7 @@ export async function handleOutboundMessage(
 
         switch (messageType) {
             case DB_COL_EMAIL:
-                const validationResultEmail = outboundEmailRequestSchema.safeParse(req?.body);
+                const validationResultEmail = OutboundEmailRequestSchema.safeParse(req?.body);
 
                 if (!validationResultEmail.success) {
                     return invalidAttributesError(validationResultEmail.error, req, res);
@@ -106,7 +106,7 @@ export async function handleOutboundMessage(
 
                 break;
             case DB_COL_PHONE_NUMBER:
-                const validationResult = outboundSmsMmsSchema.safeParse(req?.body);
+                const validationResult = OutboundSmsMmsSchema.safeParse(req?.body);
 
                 if (!validationResult.success) {
                     return invalidAttributesError(validationResult.error, req, res);

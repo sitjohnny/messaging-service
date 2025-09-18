@@ -1,4 +1,4 @@
-import { inboundEmailRequestSchema, outboundEmailRequestSchema } from '../EmailProvider';
+import { InboundEmailRequestSchema, OutboundEmailRequestSchema } from '../EmailProvider';
 
 describe('inboundEmailSchema Validation Tests', () => {
     const validInboundEmail = {
@@ -11,32 +11,32 @@ describe('inboundEmailSchema Validation Tests', () => {
     };
 
     test('should validate a valid inbound email payload', () => {
-        expect(() => inboundEmailRequestSchema.parse(validInboundEmail)).not.toThrow();
+        expect(() => InboundEmailRequestSchema.parse(validInboundEmail)).not.toThrow();
     });
 
     test('should fail with invalid email format', () => {
         const payload = { ...validInboundEmail, from: '[contact@gmail.com]' };
-        expect(() => inboundEmailRequestSchema.parse(payload)).toThrow();
+        expect(() => InboundEmailRequestSchema.parse(payload)).toThrow();
     });
 
     test('undefined attachment should throw', () => {
         const payload = { ...validInboundEmail, attachments: undefined };
-        expect(() => inboundEmailRequestSchema.parse(payload)).toThrow();
+        expect(() => InboundEmailRequestSchema.parse(payload)).toThrow();
     });
 
     test('empty attachment list is allowed', () => {
         const payload = { ...validInboundEmail, attachments: [] };
-        expect(() => inboundEmailRequestSchema.parse(payload)).not.toThrow();
+        expect(() => InboundEmailRequestSchema.parse(payload)).not.toThrow();
     });
 
     test('should fail with an invalid "xillo_id"', () => {
         const payload = { ...validInboundEmail, xillio_id: null };
-        expect(() => inboundEmailRequestSchema.parse(payload)).toThrow();
+        expect(() => InboundEmailRequestSchema.parse(payload)).toThrow();
     });
 
     test('should fail with an invalid timestamp', () => {
         const payload = { ...validInboundEmail, timestamp: 'invalid-date' };
-        expect(() => inboundEmailRequestSchema.parse(payload)).toThrow();
+        expect(() => InboundEmailRequestSchema.parse(payload)).toThrow();
     });
 });
 
@@ -50,12 +50,12 @@ describe('outboundEmailRequestSchema Validation Tests', () => {
     };
 
     test('should validate a valid outbound email payload', () => {
-        expect(() => outboundEmailRequestSchema.parse(validOutboundEmail)).not.toThrow();
+        expect(() => OutboundEmailRequestSchema.parse(validOutboundEmail)).not.toThrow();
     });
 
     test('should fail with invalid email format', () => {
         const payload = { ...validOutboundEmail, to: '[contact@gmail]' };
-        expect(() => outboundEmailRequestSchema.parse(payload)).toThrow();
+        expect(() => OutboundEmailRequestSchema.parse(payload)).toThrow();
     });
 
     test('should validate a valid outbound email with attachments', () => {
@@ -63,16 +63,16 @@ describe('outboundEmailRequestSchema Validation Tests', () => {
             ...validOutboundEmail,
             attachments: ['https://example.com/doc.docx'],
         };
-        expect(() => outboundEmailRequestSchema.parse(payload)).not.toThrow();
+        expect(() => OutboundEmailRequestSchema.parse(payload)).not.toThrow();
     });
 
     test('should fail test with a missing "to" email', () => {
         const { to, ...payload } = validOutboundEmail;
-        expect(() => outboundEmailRequestSchema.parse(payload)).toThrow();
+        expect(() => OutboundEmailRequestSchema.parse(payload)).toThrow();
     });
 
     test('should fail with an invalid "attachments" URL', () => {
         const payload = { ...validOutboundEmail, attachments: ['not-a-url'] };
-        expect(() => outboundEmailRequestSchema.parse(payload)).toThrow();
+        expect(() => OutboundEmailRequestSchema.parse(payload)).toThrow();
     });
 });

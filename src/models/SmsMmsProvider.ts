@@ -3,7 +3,7 @@ import * as z from 'zod';
 const utcTimestampFormat = z.iso.datetime();
 const phoneNumberFormat = z.string().regex(/^\+1\d{10}$/);
 
-export const outboundSmsMmsSchema = z.object({
+export const OutboundSmsMmsSchema = z.object({
     from: phoneNumberFormat,
     to: phoneNumberFormat,
     type: z.literal(['sms', 'mms']),
@@ -12,7 +12,7 @@ export const outboundSmsMmsSchema = z.object({
     timestamp: utcTimestampFormat,
 });
 
-export const inboundSmsMmsSchema = z.object({
+export const InboundSmsMmsSchema = z.object({
     from: phoneNumberFormat,
     to: phoneNumberFormat,
     type: z.literal(['sms', 'mms']),
@@ -22,5 +22,5 @@ export const inboundSmsMmsSchema = z.object({
     timestamp: utcTimestampFormat,
 });
 
-export type OutboundSmsMmsRequest = z.infer<typeof outboundSmsMmsSchema>;
-export type InboundSmsMmsRequest = z.infer<typeof inboundSmsMmsSchema>;
+export type OutboundSmsMmsRequest = z.infer<typeof OutboundSmsMmsSchema>;
+export type InboundSmsMmsRequest = z.infer<typeof InboundSmsMmsSchema>;

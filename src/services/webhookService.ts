@@ -7,8 +7,8 @@ import {
     getSmsMmsMockSuccessResponse,
     type TwilioApiResponse,
 } from '../mocks/responses/smsMmsSentResponse.ts';
-import { inboundEmailRequestSchema, type InboundEmailRequest } from '../models/EmailProvider.ts';
-import { inboundSmsMmsSchema, type InboundSmsMmsRequest } from '../models/SmsMmsProvider.ts';
+import { InboundEmailRequestSchema, type InboundEmailRequest } from '../models/EmailProvider.ts';
+import { InboundSmsMmsSchema, type InboundSmsMmsRequest } from '../models/SmsMmsProvider.ts';
 
 export interface WebhookService {
     handleIncomingMessage(
@@ -37,9 +37,9 @@ class MockWebhookService implements WebhookService {
         }
 
         // TODO: Retry logic if provider returns an error
-        if (inboundSmsMmsSchema.safeParse(inboundMessage).success) {
+        if (InboundSmsMmsSchema.safeParse(inboundMessage).success) {
             return this.smsWebhookHandler(uuid, inboundMessage as InboundSmsMmsRequest);
-        } else if (inboundEmailRequestSchema.safeParse(inboundMessage).success) {
+        } else if (InboundEmailRequestSchema.safeParse(inboundMessage).success) {
             return this.emailWebhookHandler(uuid, inboundMessage as InboundEmailRequest);
         }
 
