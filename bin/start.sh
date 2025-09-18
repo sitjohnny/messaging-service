@@ -6,4 +6,6 @@ echo "Starting the application..."
 echo "Environment: ${ENV:-development}"
 
 # Add your application startup commands here
-echo "Application started successfully!" 
+npm run dev
+
+echo "Application started successfully!"
