@@ -29,27 +29,26 @@ export async function handleIncomingMessage(
     checkSuccessFn: (result: TwilioApiResponse | EmailApiResponse) => boolean
 ) {
     logger.info(
-        `Processing inbound message request with body: ${JSON.stringify(middlewareParams.req.body)}`
+        `Processing inbound message request with body: ${JSON.stringify(middlewareParams.req?.body)}`
     );
     try {
         const { req, res } = middlewareParams;
         const mockWebhookServiceInstance = new MockWebhookService();
-        const inboundRequestInfo: InboundSmsMmsRequest | InboundEmailRequest = req.body;
+        const inboundRequestInfo: InboundSmsMmsRequest | InboundEmailRequest = req?.body;
+
+        const validationResultEmail = InboundEmailRequestSchema.safeParse(inboundRequestInfo);
+        const validationResultSms = InboundSmsMmsSchema.safeParse(inboundRequestInfo);
 
         switch (messageType) {
             case DB_COL_EMAIL:
-                const validationResultEmail = InboundEmailRequestSchema.safeParse(req?.body);
-
                 if (!validationResultEmail.success) {
                     return invalidAttributesError(validationResultEmail.error, req, res);
                 }
 
                 break;
             case DB_COL_PHONE_NUMBER:
-                const validationResult = InboundSmsMmsSchema.safeParse(req?.body);
-
-                if (!validationResult.success) {
-                    return invalidAttributesError(validationResult.error, req, res);
+                if (!validationResultSms.success) {
+                    return invalidAttributesError(validationResultSms.error, req, res);
                 }
 
                 break;
@@ -92,13 +91,14 @@ export async function handleOutboundMessage(
         );
 
         const { req, res } = middlewareParams;
-        const outboundRequestInfo: OutboundEmailRequest | OutboundSmsMmsRequest = req.body;
+        const outboundRequestInfo: OutboundEmailRequest | OutboundSmsMmsRequest = req?.body;
+        const validationResultEmail = OutboundEmailRequestSchema.safeParse(outboundRequestInfo);
+        const validationResultSms = OutboundSmsMmsSchema.safeParse(outboundRequestInfo);
+
         let serviceInstance;
 
         switch (messageType) {
             case DB_COL_EMAIL:
-                const validationResultEmail = OutboundEmailRequestSchema.safeParse(req?.body);
-
                 if (!validationResultEmail.success) {
                     return invalidAttributesError(validationResultEmail.error, req, res);
                 }
@@ -106,10 +106,8 @@ export async function handleOutboundMessage(
 
                 break;
             case DB_COL_PHONE_NUMBER:
-                const validationResult = OutboundSmsMmsSchema.safeParse(req?.body);
-
-                if (!validationResult.success) {
-                    return invalidAttributesError(validationResult.error, req, res);
+                if (!validationResultSms.success) {
+                    return invalidAttributesError(validationResultSms.error, req, res);
                 }
 
                 serviceInstance = new MockTwilioService();
